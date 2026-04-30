@@ -1,0 +1,199 @@
+{% extends 'todos/base.html' %}
+{% block title %}Todos{% endblock %}
+{% block extra_css %}
+<style>
+ .dashboard-header {
+ display: grid;
+ grid-template-columns: 1fr auto;
+ gap: 20px;
+ align-items: center;
+ margin-bottom: 24px;
+ }
+
+ .dashboard-title {
+ margin-bottom: 8px;
+ font-size: 2rem;
+ letter-spacing: -0.03em;
+ }
+
+ .dashboard-subtitle {
+ color: #5d6b85;
+ font-size: 0.95rem;
+ }
+
+ .stats-panel {
+ display: flex;
+ gap: 16px;
+ flex-wrap: wrap;
+ }
+
+ .stat-card {
+ background: rgba(255,255,255,0.95);
+ border: 1px solid rgba(102,118,234,0.15);
+ border-radius: 18px;
+ padding: 18px 22px;
+ min-width: 150px;
+ box-shadow: 0 18px 40px rgba(0,0,0,0.05);
+ }
+
+ .stat-card h3 {
+ margin: 0 0 8px;
+ font-size: 0.85rem;
+ font-weight: 600;
+ color: #5d6b85;
+ text-transform: uppercase;
+ letter-spacing: 0.08em;
+ }
+
+ .stat-card p {
+ margin: 0;
+ font-size: 1.75rem;
+ font-weight: 700;
+ color: #212b44;
+ }
+
+ .todo-panel {
+ display: grid;
+ gap: 18px;
+ margin-top: 18px;
+ }
+
+ .todo-item {
+ background: rgba(255,255,255,0.96);
+ border: 1px solid rgba(34,84,255,0.1);
+ border-radius: 22px;
+ padding: 20px;
+ box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+ display: grid;
+ grid-template-columns: 1fr auto;
+ align-items: center;
+ gap: 16px;
+ transition: transform 0.25s ease, box-shadow 0.25s ease;
+ }
+
+ .todo-item:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 24px 45px rgba(0,0,0,0.08);
+ }
+
+ .todo-item.completed {
+ background: #f5f7ff;
+ opacity: 0.95;
+ }
+
+ .todo-item .todo-content {
+ display: grid;
+ gap: 8px;
+ }
+
+ .todo-item .title {
+ margin: 0;
+ font-size: 1.1rem;
+ font-weight: 700;
+ color: #1f2937;
+ }
+
+ .todo-item.completed .title {
+ text-decoration: line-through;
+ color: #7b8794;
+ }
+
+ .description {
+ margin: 0;
+ color: #5d6b85;
+ line-height: 1.6;
+ }
+
+ .todo-meta {
+ display: flex;
+ gap: 10px;
+ flex-wrap: wrap;
+ align-items: center;
+ font-size: 0.9rem;
+ color: #5d6b85;
+ }
+
+ .todo-meta span {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 6px 12px;
+ border-radius: 999px;
+ background: rgba(102,118,234,0.08);
+ }
+
+ .actions {
+ display: flex;
+ gap: 10px;
+ justify-content: flex-end;
+ }
+
+ .actions .btn {
+ min-width: 120px;
+ }
+
+ .empty {
+ text-align: center;
+ padding: 40px 20px;
+ background: rgba(255,255,255,0.9);
+ border-radius: 20px;
+ color: #5d6b85;
+ box-shadow: 0 20px 45px rgba(0,0,0,0.05);
+ }
+</style>
+{% endblock %}
+{% block content %}
+<div class="dashboard-header">
+ <div>
+ <h1 class="dashboard-title">My Todo Dashboard</h1>
+ <p class="dashboard-subtitle">Track your tasks, finish items faster, and keep your day on schedule.</p>
+ </div>
+ <a href="{% url 'todo_create' %}" class="btn btn-primary">+ New Task</a>
+</div>
+<div class="stats-panel">
+ <div class="stat-card">
+ <h3>Total Tasks</h3>
+ <p>{{ total_tasks }}</p>
+ </div>
+ <div class="stat-card">
+ <h3>Completed</h3>
+ <p>{{ completed_count }}</p>
+ </div>
+ <div class="stat-card">
+ <h3>Pending</h3>
+ <p>{{ pending_count }}</p>
+ </div>
+</div>
+<div class="todo-panel">
+ {% if todos %}
+ {% for todo in todos %}
+ <div class="todo-item {% if todo.completed %}completed{% endif %}">
+ <form method="post" action="{% url 'todo_toggle' todo.id %}" class="todo-content">
+ {% csrf_token %}
+ <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;width:100%;">
+ <div>
+ <p class="title">{% if todo.completed %}✔ {% endif %}{{ todo.title }}</p>
+ {% if todo.description %}
+ <p class="description">{{ todo.description }}</p>
+ {% else %}
+ <p class="description">No details added yet.</p>
+ {% endif %}
+ <div class="todo-meta">
+ <span>{% if todo.completed %}Completed{% else %}Active{% endif %}</span>
+ <span>Task ID: {{ todo.id }}</span>
+ </div>
+ </div>
+ </button>
+ </form>
+ <div class="actions">
+ <a href="{% url 'todo_delete' todo.id %}" class="btn btn-danger">Delete</a>
+ </div>
+ </div>
+ {% endfor %}
+ {% else %}
+ <div class="empty">
+ <p>No tasks yet! Create one and watch your dashboard come alive.</p>
+ </div>
+ {% endif %}
+</div>
+{% endblock %}

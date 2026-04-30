@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>{% block title %}Django Todo{% endblock %}</title>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+
+ body {
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ background: linear-gradient(135deg, #667eea 0%, #66d0f1 100%);
+ min-height: 100vh;
+ padding: 20px;
+ }
+
+ .container {
+ max-width: 600px;
+ margin: 0 auto;
+ background: white;
+ border-radius: 10px;
+ box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+ padding: 30px;
+ }
+
+ h1 {
+ color: #333;
+ margin-bottom: 30px;
+ text-align: center;
+ }
+
+ .btn {
+ display: inline-block;
+ padding: 10px 20px;
+ margin: 5px;
+ border-radius: 5px;
+ text-decoration: none;
+ border: none;
+ cursor: pointer;
+ font-size: 14px;
+ transition: all 0.3s;
+ }
+
+ .btn-primary {
+ background: #66b1ea;
+ color: white;
+ }
+
+ .btn-primary:hover {
+ background: #4eb4eb;
+ }
+
+ .btn-danger {
+ background: #f56565;
+ color: white;
+ }
+
+ .btn-danger:hover {
+ background: #e53e3e;
+ }
+
+ .btn-success {
+ background: #48bb78;
+ color: white;
+ }
+
+ .btn-success:hover {
+ background: #38a169;
+ }
+
+ .form-input {
+ width: 100%;
+ padding: 12px;
+ margin-bottom: 15px;
+ border: 2px solid #ddd;
+ border-radius: 5px;
+ font-size: 14px;
+ }
+ .form-input:focus {
+ outline: none;
+ border-color: #92ea83;
+ }
+
+ {% block extra_css %}{% endblock %}
+ </style>
+</head>
+<body>
+ <div class="container">
+ {% block content %}{% endblock %}
+ </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Todo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #9de999;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        input.valid, textarea.valid {
+            border-color: #4CAF50;
+            background-color: #f0fdf4;
+        }
+        input.invalid, textarea.invalid {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .error-message {
+            color: #674848;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        button {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover:not(:disabled) {
+            background-color: #45a049;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        a {
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create a New Todo</h1>
+    <form method="POST" id="todoForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Todo Title *</label>
+            <input type="text" id="title" name="title" placeholder="Enter your todo title" required>
+            <div class="error-message">Title is required</div>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Enter description (optional)" rows="4"></textarea>
+        </div>
+        <button type="submit" id="submitBtn" disabled>Create Todo</button>
+    </form>
+    <a href="/">Back to Todos</a>
+
+    <script>
+        const form = document.getElementById('todoForm');
+        const titleInput = document.getElementById('title');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.querySelector('.error-message');
+
+        function validateForm() {
+            const titleValue = titleInput.value.trim();
+            const isValid = titleValue.length > 0;
+
+            // Update title field appearance
+            if (titleValue.length > 0) {
+                titleInput.classList.add('valid');
+                titleInput.classList.remove('invalid');
+                errorMessage.classList.remove('show');
+            } else if (titleInput === document.activeElement && titleValue.length === 0) {
+                titleInput.classList.add('invalid');
+                titleInput.classList.remove('valid');
+                errorMessage.classList.add('show');
+            } else {
+                titleInput.classList.remove('valid', 'invalid');
+                errorMessage.classList.remove('show');
+            }
+
+            // Enable/disable submit button
+            submitBtn.disabled = !isValid;
+        }
+
+        titleInput.addEventListener('input', validateForm);
+        titleInput.addEventListener('blur', validateForm);
+        titleInput.addEventListener('focus', validateForm);
+
+        form.addEventListener('submit', function(e) {
+            if (titleInput.value.trim() === '') {
+                e.preventDefault();
+                titleInput.classList.add('invalid');
+                errorMessage.classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
