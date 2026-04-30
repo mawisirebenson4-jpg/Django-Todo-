@@ -26,7 +26,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-^$19gx#!-mq42=lvhm-v2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        'ALLOWED_HOSTS',
+        '127.0.0.1,localhost,django-todo-1-tm3y.onrender.com'
+    ).split(',')
+    if host.strip()
+]
 
 
 # Application definition
